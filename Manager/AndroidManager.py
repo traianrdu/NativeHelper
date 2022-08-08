@@ -34,3 +34,14 @@ class AndroidManager:
         str
             string representation as a Localizable
         """
+        delete_list = ["<string name="]
+        change_list = ["\">"]
+        change_list2 = ["</string>"]
+        line = self.strings_xml
+        for word in delete_list:
+            line = line.replace(word, "")
+        for word in change_list:
+            line = line.replace(word, "\" = \"")
+        for word in change_list2:
+            line = line.replace(word, "\"")
+        print(line)
