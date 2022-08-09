@@ -1,8 +1,9 @@
 from Manager.AndroidManager import AndroidManager
 
 
-global_string = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <resources> <plurals name=\"plural_name\">" \
-                "<item quantity=[\"zero\" | \"one\" | \"two\" | \"few\" | \"many\" | \"other\"]>text_string</item>" \
+global_string = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" \
+                "<resources>" \
+                "<plurals name=\"plural_name\">" \
                 "<item quantity=\"one\">%d song found.</item>" \
                 "<item quantity=\"other\">%d songs found.</item>" \
                 "<item quantity=\"one\">Znaleziono %d piosenkę.</item>" \
@@ -14,7 +15,8 @@ global_string = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <resources> <plurals
                 "<item>Venus</item>" \
                 "<item>Earth</item>" \
                 "<item>Mars</item>" \
-                "</string-array><string name=\"string_array_name\">text_string</string>" \
+                "</string-array>" \
+                "<string name=\"string_array_name\">text_string</string>" \
                 "<string name=\"string_array_name\" translatable=\"false\">text_string</string>" \
                 "<string name=\"string_array_name\" formatted=\"false\">text_string</string>" \
                 "<string name=\"welcome_messages\">Hello, %1$s! You have %2$d new messages.</string>" \
@@ -22,6 +24,10 @@ global_string = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <resources> <plurals
                 "<!--comment-->" \
                 "</resources>"
 
+test_string = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" \
+              "<resources>" \
+              "<string name=\"string_name\">text_string</string>" \
+              "</resources>"
 
 def test_prototype():
     # Test and debug the given script.

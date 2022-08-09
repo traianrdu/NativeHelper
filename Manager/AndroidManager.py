@@ -57,9 +57,9 @@ class AndroidManager:
                 <item>Mars</item>
             </string-array>
             ...
-            <string name="string_array_name">text_string</string>
-            <string name="string_array_name" translatable="false">text_string</string>
-            <string name="string_array_name" formatted="false">text_string</string>
+            <string name="string_name">text_string</string>
+            <string name="string_name" translatable="false">text_string</string>
+            <string name="string_name" formatted="false">text_string</string>
             <string name="welcome_messages">Hello, %1$s! You have %2$d new messages.</string>
             <string name="welcome">Welcome to <b>Android</b>!</string>
             ...
@@ -92,7 +92,7 @@ class AndroidManager:
         ----------------------------------------------------------------------------------------------------------------
         Tab	                            \t
         ----------------------------------------------------------------------------------------------------------------
-        U+XXXX Unicode character	    \uXXXX
+        U+XXXX Unicode character	    \ uXXXX
         ----------------------------------------------------------------------------------------------------------------
         Single quote (')                Any of the following:
                                             \'
@@ -144,8 +144,11 @@ class AndroidManager:
 
     def test(self):
         """Test functionalities"""
-        #root = ET.parse(self.strings_xml)
+        root = ET.fromstring(self.strings_xml)
         print(self.strings_xml)
+        for child in root:
+            print(child.tag, child.attrib, child.text)
+        print(root.tag, root.attrib, root.text)
 
     def convert_to_iOS(self):
         """Converts the Android text to iOS Localizable format
