@@ -11,10 +11,27 @@ class AndroidManager:
 
         Methods
         -------
-        convert_to_iOS()
+        convert_to_iOS() -> str
             Converts Android string format to iOS Localizable
+        is_plurals() -> bool
+            Checks if the string is plural format
+        is_string_array() -> bool
+            Checks if the string is string-array format
+        is_string() -> bool
+            Checks if the string is string format
+        is_comment() -> bool
+            Checks if the string is a comment
+        is_item() -> bool
+            Checks if the string is item
+        is_translatable() -> bool
+            Checks if the string is translatable
+        is_formatted() -> bool
+            Checks if the string is formatted
+        get_name()
+        get_translatable()
+        get_formatted()
 
-        string.xml format
+        strings.xml format
         -------
         <?xml version="1.0" encoding="utf-8"?>
         <resources>
@@ -38,8 +55,12 @@ class AndroidManager:
             </string-array>
             ...
             <string name="string_array_name">text_string</string>
+            <string name="string_array_name translatable="false">text_string</string>
+            <string name="string_array_name formatted="false">text_string</string>
             <string name="welcome_messages">Hello, %1$s! You have %2$d new messages.</string>
             <string name="welcome">Welcome to <b>Android</b>!</string>
+            ...
+            <!--comment-->
             ...
         </resources>
 
@@ -109,7 +130,7 @@ class AndroidManager:
         More info:  https://developer.android.com/guide/topics/resources/string-resource
         """
 
-    def __init__(self, strings_xml):
+    def __init__(self, strings_xml: str):
         """
         Parameters
         ----------
@@ -140,3 +161,55 @@ class AndroidManager:
         for word in change_list2:
             line = line.replace(word, "\"")
         print(line)
+
+    def is_plurals(self) -> bool:
+        """Checks if the string is plural format
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        bool
+            True if the string is a plural
+            False if the string is not a plural
+        """
+
+    def is_string_array(self) -> bool:
+        """Checks if the string is string-array format
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        bool
+            True if the string is a string-array
+            False if the string is not a string-array
+        """
+
+    def is_string(self) -> bool:
+        """Checks if the string is string format
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        bool
+            True if the string is a string type format
+            False if the string is not a string type format
+        """
+
+    def is_comment(self) -> bool:
+        """Checks if the string is a comment
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        bool
+            True if the string is a comment
+            False if the string is not a comment
+        """
