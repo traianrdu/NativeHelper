@@ -1,3 +1,6 @@
+import xml.etree.ElementTree as ET
+
+
 class AndroidManager:
     """
         A class used to represent the Android Manager
@@ -55,8 +58,8 @@ class AndroidManager:
             </string-array>
             ...
             <string name="string_array_name">text_string</string>
-            <string name="string_array_name translatable="false">text_string</string>
-            <string name="string_array_name formatted="false">text_string</string>
+            <string name="string_array_name" translatable="false">text_string</string>
+            <string name="string_array_name" formatted="false">text_string</string>
             <string name="welcome_messages">Hello, %1$s! You have %2$d new messages.</string>
             <string name="welcome">Welcome to <b>Android</b>!</string>
             ...
@@ -138,6 +141,11 @@ class AndroidManager:
             a formatted string that contains Android string file
         """
         self.strings_xml = strings_xml
+
+    def test(self):
+        """Test functionalities"""
+        #root = ET.parse(self.strings_xml)
+        print(self.strings_xml)
 
     def convert_to_iOS(self):
         """Converts the Android text to iOS Localizable format
