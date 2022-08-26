@@ -18,6 +18,7 @@ class XMLManager:
         get_root() -> str
             Returns the root
     """
+
     def __init__(self, xml_text: str):
         """
         Parameters
@@ -39,3 +40,11 @@ class XMLManager:
             root element
         """
         return ET.fromstring(self.xml_text)
+
+    def get_children(self, root: Element):
+        """"""
+        for child in self.get_root():
+            """"""
+        for item in root:
+            if item.tag == "item":
+                """"""

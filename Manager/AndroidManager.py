@@ -1,4 +1,4 @@
-import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element
 from Manager.XMLManager import XMLManager
 
 
@@ -156,6 +156,8 @@ class AndroidManager:
         str
             string representation as a Localizable
         """
+
+        """
         delete_list = ["<string name="]
         change_list = ["\">"]
         change_list2 = ["</string>"]
@@ -166,7 +168,17 @@ class AndroidManager:
             line = line.replace(word, "\" = \"")
         for word in change_list2:
             line = line.replace(word, "\"")
-        print(line)
+        print(line)"""
+        localizable_list = []   # empty list of localizable
+        xmlManager = XMLManager(self.strings_xml)   # init manager
+        root = xmlManager.get_root()    # parse XML
+
+        for child in root:  # get child
+            if self.is_plurals(child):  # checks if it is plural
+                plural_name = self.get_name(child)  # get the name attribute
+                for item in child:  # get item
+                    localizable_list.append(self.convert_plurals_item_to_IOS(item, plural_name))    # append the list
+        print(localizable_list)
 
     def test(self):
         """Test functionalities"""
@@ -178,11 +190,34 @@ class AndroidManager:
             print(child.tag, child.attrib, child.text)
         print(root.tag, root.attrib, root.text)
 
-    def is_plurals(self) -> bool:
+    def test2(self):
+        """Test functionalities"""
+        xmlManager = XMLManager(self.strings_xml)
+        root = xmlManager.get_root()
+
+        for child in root:
+            if self.is_plurals(child):
+                plural_name = self.get_name(child)
+                print(plural_name)
+                for items in child:
+                    print(items.tag, items.attrib, items.text)
+                    # print(next(iter(items.attrib.values())))
+                    item_quantity = self.get_quantity(items)
+                    if "%d" in items.text:
+                        localizable_text = "\"" + plural_name + "_" + item_quantity + "\" = \"" + \
+                                           self.get_filtered_formatter(items.text) + "\";"
+                    else:
+                        localizable_text = "\"" + plural_name + "_" + item_quantity + "\" = \"" + items.text + "\";"
+                    print(localizable_text)
+
+    @staticmethod
+    def is_plurals(child: Element) -> bool:
         """Checks if the string is plural format
 
         Parameters
         ----------
+        child: Element
+            a child element from the parsed XML
 
         Returns
         -------
@@ -190,6 +225,32 @@ class AndroidManager:
             True if the string is a plural
             False if the string is not a plural
         """
+        if child.tag == "plurals":
+            return True
+        return False
+
+    def convert_plurals_item_to_IOS(self, item: Element, plural_name: str) -> str:
+        """Converts plurals item to IOS Localizable
+
+        Parameters
+        ----------
+        item: Element
+            a child element from the parsed XML
+        plural_name: str
+            name used in Localizable naming
+
+        Returns
+        -------
+        str
+            Localizable text
+        """
+        item_quantity = self.get_quantity(item)
+        if "%d" in item.text:
+            localizable_text = "\"" + plural_name + "_" + item_quantity + "\" = \"" + \
+                               self.get_filtered_formatter(item.text) + "\";"
+        else:
+            localizable_text = "\"" + plural_name + "_" + item_quantity + "\" = \"" + item.text + "\";"
+        return localizable_text
 
     def is_string_array(self) -> bool:
         """Checks if the string is string-array format
@@ -229,3 +290,51 @@ class AndroidManager:
             True if the string is a comment
             False if the string is not a comment
         """
+
+    @staticmethod
+    def get_name(child: Element) -> str:
+        """Returns name of the element
+
+        Parameters
+        ----------
+        child: Element
+            a child element from the parsed XML
+
+        Returns
+        -------
+        str
+            name of the element
+        """
+        return child.attrib['name']
+
+    @staticmethod
+    def get_quantity(child: Element) -> str:
+        """Returns quantity attribute
+
+        Parameters
+        ----------
+        child: Element
+            a child element from the parsed XML
+
+        Returns
+        -------
+        str
+            quantity attribute
+        """
+        return child.attrib['quantity']
+
+    @staticmethod
+    def get_filtered_formatter(string: str) -> str:
+        """Filters the text and replaces the string with correct formatter
+
+        Parameters
+        ----------
+        string: str
+            basic string that contains %d
+
+        Returns
+        -------
+        str
+            formatted string
+        """
+        return string.replace("%d", "%@")
