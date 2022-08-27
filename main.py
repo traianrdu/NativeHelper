@@ -34,6 +34,7 @@ def test_prototype():
     # Test and debug the given script.
     am = AndroidManager(global_string)
     #am.test2()
+    am.test()
     am.convert_to_iOS()
 
 

@@ -156,28 +156,23 @@ class AndroidManager:
         str
             string representation as a Localizable
         """
-
-        """
-        delete_list = ["<string name="]
-        change_list = ["\">"]
-        change_list2 = ["</string>"]
-        line = self.strings_xml
-        for word in delete_list:
-            line = line.replace(word, "")
-        for word in change_list:
-            line = line.replace(word, "\" = \"")
-        for word in change_list2:
-            line = line.replace(word, "\"")
-        print(line)"""
         localizable_list = []   # empty list of localizable
         xmlManager = XMLManager(self.strings_xml)   # init manager
         root = xmlManager.get_root()    # parse XML
 
         for child in root:  # get child
-            if self.is_plurals(child):  # checks if it is plural
+            if self.is_string(child):  # checks if it is basic string
+                localizable_list.append(self.convert_string_to_IOS(child))   # append the list
+            elif self.is_string_array(child):  # checks if it is string-array
+                string_array_name = self.get_name(child)  # get the name attribute
+                for item in child:  # get item
+                    # append the list
+                    localizable_list.append(self.convert_string_array_item_to_IOS(item, string_array_name))
+            elif self.is_plurals(child):  # checks if it is plural
                 plural_name = self.get_name(child)  # get the name attribute
                 for item in child:  # get item
                     localizable_list.append(self.convert_plurals_item_to_IOS(item, plural_name))    # append the list
+
         print(localizable_list)
 
     def test(self):
@@ -189,26 +184,6 @@ class AndroidManager:
         for child in root:
             print(child.tag, child.attrib, child.text)
         print(root.tag, root.attrib, root.text)
-
-    def test2(self):
-        """Test functionalities"""
-        xmlManager = XMLManager(self.strings_xml)
-        root = xmlManager.get_root()
-
-        for child in root:
-            if self.is_plurals(child):
-                plural_name = self.get_name(child)
-                print(plural_name)
-                for items in child:
-                    print(items.tag, items.attrib, items.text)
-                    # print(next(iter(items.attrib.values())))
-                    item_quantity = self.get_quantity(items)
-                    if "%d" in items.text:
-                        localizable_text = "\"" + plural_name + "_" + item_quantity + "\" = \"" + \
-                                           self.get_filtered_formatter(items.text) + "\";"
-                    else:
-                        localizable_text = "\"" + plural_name + "_" + item_quantity + "\" = \"" + items.text + "\";"
-                    print(localizable_text)
 
     @staticmethod
     def is_plurals(child: Element) -> bool:
@@ -237,7 +212,7 @@ class AndroidManager:
         item: Element
             a child element from the parsed XML
         plural_name: str
-            name used in Localizable naming
+            name used in Localizable definition
 
         Returns
         -------
@@ -245,18 +220,18 @@ class AndroidManager:
             Localizable text
         """
         item_quantity = self.get_quantity(item)
-        if "%d" in item.text:
-            localizable_text = "\"" + plural_name + "_" + item_quantity + "\" = \"" + \
-                               self.get_filtered_formatter(item.text) + "\";"
-        else:
-            localizable_text = "\"" + plural_name + "_" + item_quantity + "\" = \"" + item.text + "\";"
+        localizable_text = "\"" + plural_name + "_" + item_quantity + "\" = \"" + \
+                           self.get_filtered_formatter(item.text) + "\";"
         return localizable_text
 
-    def is_string_array(self) -> bool:
+    @staticmethod
+    def is_string_array(child: Element) -> bool:
         """Checks if the string is string-array format
 
         Parameters
         ----------
+        child: Element
+            a child element from the parsed XML
 
         Returns
         -------
@@ -264,12 +239,39 @@ class AndroidManager:
             True if the string is a string-array
             False if the string is not a string-array
         """
+        if child.tag == "string-array":
+            return True
+        return False
 
-    def is_string(self) -> bool:
+    def convert_string_array_item_to_IOS(self, item: Element, string_array_name: str) -> str:
+        """Converts string_array item to IOS Localizable
+
+        Parameters
+        ----------
+        item: Element
+            a child element from the parsed XML
+        string_array_name: str
+            name used in Localizable definition
+
+        Returns
+        -------
+        str
+            Localizable text
+        """
+        # get the first part of the text
+        split = item.text.rsplit(' ')[0]
+        localizable_text = "\"" + string_array_name + "_" + split + "\" = \"" + \
+                           self.get_filtered_formatter(item.text) + "\";"
+        return localizable_text
+
+    @staticmethod
+    def is_string(child: Element) -> bool:
         """Checks if the string is string format
 
         Parameters
         ----------
+        child: Element
+            a child element from the parsed XML
 
         Returns
         -------
@@ -277,12 +279,35 @@ class AndroidManager:
             True if the string is a string type format
             False if the string is not a string type format
         """
+        if child.tag == "string":
+            return True
+        return False
 
-    def is_comment(self) -> bool:
+    def convert_string_to_IOS(self, item: Element) -> str:
+        """Converts string item to IOS Localizable
+
+        Parameters
+        ----------
+        item: Element
+            a child element from the parsed XML
+
+        Returns
+        -------
+        str
+            Localizable text
+        """
+
+        localizable_text = "\"" + self.get_name(item) + "\" = \"" + self.get_filtered_formatter(item.text) + "\";"
+        return localizable_text
+
+    @staticmethod
+    def is_comment(child: Element) -> bool:
         """Checks if the string is a comment
 
         Parameters
         ----------
+        child: Element
+            a child element from the parsed XML
 
         Returns
         -------
@@ -290,6 +315,7 @@ class AndroidManager:
             True if the string is a comment
             False if the string is not a comment
         """
+        # checks <!-- and termination -->
 
     @staticmethod
     def get_name(child: Element) -> str:
@@ -337,4 +363,7 @@ class AndroidManager:
         str
             formatted string
         """
-        return string.replace("%d", "%@")
+        if "%d" in string:
+            return string.replace("%d", "%@")
+        else:
+            return string
