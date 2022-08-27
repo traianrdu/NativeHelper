@@ -3,7 +3,7 @@ from Manager.AndroidManager import AndroidManager
 
 global_string = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" \
                 "<resources>" \
-                "<plurals name=\"plural_name\">" \
+                "<plurals name=\"plural_name_abc_name\" abc=\"aaa\">" \
                 "<item quantity=\"one\">%d song found.</item>" \
                 "<item quantity=\"other\">%d songs found.</item>" \
                 "<item quantity=\"one\">Znaleziono %d piosenkę.</item>" \
@@ -29,10 +29,13 @@ test_string = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" \
               "<string name=\"string_name\">text_string</string>" \
               "</resources>"
 
+
 def test_prototype():
     # Test and debug the given script.
     am = AndroidManager(global_string)
+    #am.test2()
     am.test()
+    am.convert_to_iOS()
 
 
 if __name__ == '__main__':
