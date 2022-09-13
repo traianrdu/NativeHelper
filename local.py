@@ -24,6 +24,8 @@ global_string = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" \
                 "<!--comment-->" \
                 "</resources>"
 
+test_json = {"message": "<?xml version=\"1.0\" encoding=\"utf-8\"?><resources><string name=\"string_name\">text_string</string></resources>" }
+
 test_string = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" \
               "<resources>" \
               "<string name=\"string_name\">text_string</string>" \
@@ -35,7 +37,7 @@ def test_prototype():
     am = AndroidManager(global_string)
     #am.test2()
     am.test()
-    am.convert_to_iOS()
+    print(am.convert_to_iOS())
 
 
 if __name__ == '__main__':

@@ -145,7 +145,7 @@ class AndroidManager:
         """
         self.strings_xml = strings_xml
 
-    def convert_to_iOS(self):
+    def convert_to_iOS(self) -> list[str]:
         """Converts the Android text to iOS Localizable format
 
         Parameters
@@ -173,7 +173,7 @@ class AndroidManager:
                 for item in child:  # get item
                     localizable_list.append(self.convert_plurals_item_to_IOS(item, plural_name))    # append the list
 
-        print(localizable_list)
+        return localizable_list
 
     def test(self):
         """Test functionalities"""
