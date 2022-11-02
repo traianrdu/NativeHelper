@@ -2,6 +2,7 @@ from flask import Flask, request
 from Manager.AndroidManager import AndroidManager
 
 app = Flask(__name__)
+app.config["DEBUG"] = True
 
 
 @app.route("/string_to_IOS", methods=['POST'])
@@ -20,6 +21,12 @@ def convert_file_to_IOS():
     """Converts entire file to IOS"""
 
 
+@app.route("/", methods=['GET', 'POST'])
+def home_page():
+    """Home page"""
+    return "Home page"
+
+
 if __name__ == "__main__":
-    app.debug = True
+    # app.debug = True
     app.run()

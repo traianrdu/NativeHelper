@@ -145,7 +145,7 @@ class AndroidManager:
         """
         self.strings_xml = strings_xml
 
-    def convert_to_iOS(self) -> list[str]:
+    def convert_to_iOS(self):
         """Converts the Android text to iOS Localizable format
 
         Parameters
